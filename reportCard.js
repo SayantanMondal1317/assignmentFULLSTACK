@@ -1,3 +1,5 @@
+// trying to push directly to github
+
 class Student {
   constructor(name, scores) {
     this.name = name;
