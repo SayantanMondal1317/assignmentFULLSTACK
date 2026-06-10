@@ -5,3 +5,4 @@ attendance.json
 *.jpg
 *.jpeg
 *.png
+package-lock.json
