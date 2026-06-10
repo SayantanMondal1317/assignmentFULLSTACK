@@ -10,6 +10,7 @@ function extractRollNumber(qrString) {
 function isRegistered(rollNumber) {
   const num = Number(rollNumber);
   return num >= 240001 && num <= 240400;
+  // return num >= 250001 && num <= 251500; // mock range for testing my friends
 }
 
 if (require.main === module) {
