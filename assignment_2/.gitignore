@@ -1,3 +1,7 @@
 node_modules
 .env
 attendance.json
+//ignore the pictures uploaded by the users
+*.jpg
+*.jpeg
+*.png
