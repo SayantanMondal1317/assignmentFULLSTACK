@@ -1,0 +1,572 @@
+/* ==========================================================================
+   🌌 CIPHER REVELATION SYSTEM SPEC (index3.css) - CINEMATIC RYOKU THEME
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap");
+
+:root {
+  /* High-End Editorial Typography Highways */
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Deep Atmospheric Ink Palette */
+  --bg-void: #07090e;
+  --bg-hud: rgba(13, 17, 26, 0.65);
+  --bg-input: rgba(5, 7, 11, 0.8);
+
+  /* High-Contrast Typographical Values */
+  --text-pure: #ffffff;
+  --text-editorial: #f1f5f9;
+  --text-muted: #64748b;
+  --text-ghost: #334155;
+
+  /* Ryoku Protocol Priority Tokens */
+  --color-p0: #f43f5e; /* Coral Crimson */
+  --color-p1: #eab308; /* Antique Gold */
+  --color-p2: #06b6d4; /* Cyber Cyan */
+  --color-system: #818cf8; /* Protocol Indigo */
+
+  /* Structural Rules */
+  --border-hud: 1px solid rgba(255, 255, 255, 0.05);
+  --border-hud-bright: 1px solid rgba(255, 255, 255, 0.12);
+  --ease-cinematic: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ==========================================================================
+   🎥 VIGNETTE & CINEMATIC VIEWPORT CANVAS
+   ========================================================================== */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--text-editorial);
+  background-color: var(--bg-void);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+
+  /* FIXED: Balanced the overlays so the GIF cuts through clearly while keeping text perfectly legible.
+  */
+  background-image:
+    radial-gradient(
+      circle at center,
+      rgba(7, 9, 14, 0.4) 0%,
+      var(--bg-void) 95%
+    ),
+    linear-gradient(rgba(7, 9, 14, 0.7), rgba(7, 9, 14, 0.8)),
+    url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2YxNGtkNW44Y2VwaXdkODNzNXc1Zmk2am1iaW1hbWpnbjVsdjF2NyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qrtxxe638kXlhKBDxg/giphy.gif");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Base Typographical styling overrides */
+h1,
+h2,
+.sidebar-brand {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   🧱 GLOBAL APPARATUS LAYOUT (App.jsx)
+   ========================================================================== */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  /* FIXED: Removed aggressive blur that was masking the body background GIF */
+  backdrop-filter: saturate(1.1);
+}
+
+.sidebar {
+  width: 260px;
+  background-color: rgba(5, 7, 11, 0.6);
+  border-right: var(--border-hud);
+  padding: 2.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.sidebar-brand {
+  margin: 0 0 2.5rem 0;
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  text-align: left;
+  padding-left: 0.5rem;
+  color: var(--text-pure);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.sidebar-btn {
+  width: 100%;
+  padding: 0.75rem 0.75rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.sidebar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-pure);
+}
+
+.sidebar-btn.active {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-pure);
+  font-weight: 700;
+  border-left: 2px solid var(--color-system);
+  padding-left: calc(0.75rem - 2px);
+}
+
+.sidebar-footer {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.15);
+  text-align: left;
+  padding-left: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.main-content {
+  flex: 1;
+  padding: 3rem;
+  overflow-y: auto;
+  max-width: 1200px;
+}
+
+/* ==========================================================================
+   📊 DASHBOARD SYSTEM VISUALS (Dashboard.jsx)
+   ========================================================================== */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.metric-card {
+  background-color: var(--bg-hud);
+  padding: 1.75rem;
+  border-radius: 6px;
+  border: var(--border-hud);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Format specific stats data cleanly within the card structure */
+.metric-card h3 {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem 0;
+}
+
+.metric-card p,
+.metric-card strong {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.6rem;
+  color: var(--text-pure);
+  margin: 0;
+  line-height: 1.1;
+}
+
+/* Apply sleek signature accent tones to numeric parameters */
+.metric-grid .metric-card:nth-child(1) p,
+.metric-grid .metric-card:nth-child(1) strong {
+  color: var(--text-pure);
+}
+.metric-grid .metric-card:nth-child(2) p,
+.metric-grid .metric-card:nth-child(2) strong {
+  color: var(--color-p2);
+}
+.metric-grid .metric-card:nth-child(3) p,
+.metric-grid .metric-card:nth-child(3) strong {
+  color: var(--color-p1);
+}
+
+.priority-panel {
+  background-color: var(--bg-hud);
+  padding: 1.75rem;
+  border-radius: 6px;
+  border: var(--border-hud);
+}
+
+.priority-item {
+  background-color: rgba(5, 7, 11, 0.4);
+  padding: 1rem 1.25rem;
+  border-radius: 4px;
+  margin-bottom: 0.6rem;
+  border: var(--border-hud);
+  border-left: 3px solid var(--color-p1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ==========================================================================
+   📋 TASK BOARD VISUAL MODULES (TaskBoard.jsx)
+   ========================================================================== */
+.board-grid {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.board-column {
+  flex: 1 1 240px;
+  background-color: var(--bg-hud);
+  padding: 1.25rem;
+  border-radius: 6px;
+  border: var(--border-hud);
+  min-height: 400px;
+}
+
+.board-column h3 {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: var(--border-hud);
+}
+
+.task-card {
+  background-color: rgba(5, 7, 11, 0.3);
+  padding: 1.1rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  border: var(--border-hud);
+  border-left: 3px solid var(--color-system);
+  transition: all 0.3s var(--ease-cinematic);
+}
+
+.task-card:hover {
+  background-color: rgba(5, 7, 11, 0.6);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.task-card.is-strikethrough span {
+  text-decoration: line-through !important;
+  color: var(--text-ghost) !important;
+}
+
+.task-card.is-fading {
+  opacity: 0 !important;
+  transform: scale(0.95);
+}
+
+.badge-pill {
+  margin-left: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-p0);
+  background-color: rgba(244, 63, 94, 0.08);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+/* ==========================================================================
+   🎯 GOAL TRACKER SYSTEM (GoalTracker.jsx)
+   ========================================================================== */
+.goal-form {
+  background-color: var(--bg-hud);
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: var(--border-hud);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.goal-card {
+  background-color: var(--bg-hud);
+  padding: 1.5rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: var(--border-hud);
+  border-left: 3px solid var(--color-system);
+  box-shadow: none;
+}
+
+.goal-card.completed {
+  border-left-color: var(--color-p2);
+}
+
+.progress-track {
+  flex: 1;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--text-pure);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  transition: width 0.3s var(--ease-cinematic);
+}
+
+.goal-card.completed .progress-fill {
+  background: var(--color-p2);
+  box-shadow: 0 0 8px var(--color-p2);
+}
+
+.btn-counter {
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  background-color: rgba(5, 7, 11, 0.5);
+  color: var(--text-editorial);
+  border: var(--border-hud);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-counter:hover {
+  background-color: var(--text-pure);
+  color: var(--bg-void);
+  border-color: var(--text-pure);
+}
+
+/* ==========================================================================
+   ⏱️ FOCUS COUNTDOWN LAYOUT (FocusTimer.jsx)
+   ========================================================================== */
+.timer-container {
+  max-width: 500px;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+.timer-face {
+  font-size: 6.5rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  background-color: transparent;
+  padding: 1.5rem;
+  border-radius: 0;
+  margin: 1.5rem 0;
+  border: none;
+  box-shadow: none;
+  letter-spacing: -2px;
+  color: var(--text-pure);
+  text-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
+}
+
+.timer-face.break {
+  color: var(--color-p2);
+  text-shadow: 0 4px 30px rgba(6, 182, 212, 0.15);
+}
+
+/* ==========================================================================
+   🎨 INSPIRATION MOOD BOARD (MoodBoard.jsx)
+   ========================================================================== */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.mood-card {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--bg-hud);
+  border: var(--border-hud);
+  min-height: 150px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s var(--ease-cinematic);
+}
+
+.mood-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.delete-overlay-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--bg-void);
+  border: var(--border-hud);
+  color: var(--color-p0);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  z-index: 5;
+  transition: all 0.2s;
+}
+
+.delete-overlay-btn:hover {
+  background: var(--color-p0);
+  color: var(--text-pure);
+  border-color: var(--color-p0);
+}
+
+/* ==========================================================================
+   ⌨️ STANDARDIZED CORE CONTROLS (Inputs, Action Buttons)
+   ========================================================================== */
+input[type="text"],
+input[type="number"] {
+  background-color: var(--bg-input);
+  border: var(--border-hud);
+  color: var(--text-pure);
+  padding: 0.65rem 0.9rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-primary {
+  padding: 0.65rem 1.5rem;
+  background-color: transparent;
+  color: var(--text-pure);
+  border: var(--border-hud-bright);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--text-pure);
+  color: var(--bg-void);
+  border-color: var(--text-pure);
+}
+
+/* ==========================================================================
+   📆 DROPDOWNS & PICKERS PRESETS (TaskBoard Quick Picker)
+   ========================================================================== */
+.date-picker-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.date-pill-trigger {
+  background-color: rgba(5, 7, 11, 0.4);
+  border: var(--border-hud);
+  color: var(--text-editorial);
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s;
+}
+
+.date-pill-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.date-presets-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background-color: #0d111a;
+  border: var(--border-hud-bright);
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-top: 6px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 155px;
+}
+
+.preset-option {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.15s;
+}
+
+.preset-option:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--text-pure);
+}
+
+.custom-date-field {
+  background-color: var(--bg-input);
+  border: var(--border-hud);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.3rem;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.25rem;
+}

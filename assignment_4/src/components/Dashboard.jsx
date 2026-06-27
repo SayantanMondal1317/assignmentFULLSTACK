@@ -34,23 +34,9 @@ export default function Dashboard({ tasks, goals }) {
       </p>
 
       {/* Grid Layout for Top Metric Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "1.5rem",
-          marginBottom: "2.5rem",
-        }}
-      >
+      <div className="metric-grid">
         {/* Metric Card 1: Completed Tasks */}
-        <div
-          style={{
-            background: "#1a1a1a",
-            padding: "1.5rem",
-            borderRadius: "10px",
-            border: "1px solid #333",
-          }}
-        >
+        <div className="metric-card">
           <span style={{ fontSize: "2rem" }}>🏆</span>
           <h4
             style={{
@@ -79,14 +65,7 @@ export default function Dashboard({ tasks, goals }) {
         </div>
 
         {/* Metric Card 2: Aggregated Macro Goals Progress */}
-        <div
-          style={{
-            background: "#1a1a1a",
-            padding: "1.5rem",
-            borderRadius: "10px",
-            border: "1px solid #333",
-          }}
-        >
+        <div className="metric-card">
           <span style={{ fontSize: "2rem" }}>📈</span>
           <h4
             style={{
@@ -143,14 +122,7 @@ export default function Dashboard({ tasks, goals }) {
       </div>
 
       {/* Bottom Section: Focus Window for Today's High Priorities */}
-      <div
-        style={{
-          background: "#1a1a1a",
-          padding: "1.5rem",
-          borderRadius: "10px",
-          border: "1px solid #333",
-        }}
-      >
+      <div className="priority-panel">
         <h3
           style={{
             margin: "0 0 1rem 0",
@@ -167,20 +139,7 @@ export default function Dashboard({ tasks, goals }) {
         {todaysPriorities.length > 0 ? (
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {todaysPriorities.map((task) => (
-              <li
-                key={task.id}
-                style={{
-                  background: "#222",
-                  padding: "0.85rem 1rem",
-                  borderRadius: "6px",
-                  marginBottom: "0.5rem",
-                  borderLeft: "4px solid #ffb703",
-                  fontSize: "0.95rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+              <li key={task.id} className="priority-item">
                 <span>{task.title}</span>
                 <span
                   style={{

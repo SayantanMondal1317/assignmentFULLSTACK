@@ -1,0 +1,565 @@
+/* ==========================================================================
+   🌌 CIPHER CYBER-OBSIDIAN SYSTEM STYLING SPEC (index2.css)
+   ========================================================================== */
+
+:root {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  color-scheme: dark;
+
+  /* 2026 Premium Dark Palette Tokens */
+  --bg-primary: #0a0d14;
+  --bg-sidebar: #101420;
+  --bg-surface: #151b2c;
+  --bg-card-active: #1e263f;
+
+  --text-main: #f8fafc;
+  --text-muted: #64748b;
+  --text-dim: #334155;
+
+  /* Neon Prism Interactive Signatures */
+  --accent-purple: #6366f1;
+  --accent-purple-glow: rgba(99, 102, 241, 0.15);
+  --accent-green: #10b981;
+  --accent-green-glow: rgba(16, 185, 129, 0.15);
+  --accent-amber: #f59e0b;
+  --accent-amber-glow: rgba(245, 158, 11, 0.15);
+  --accent-red: #f43f5e;
+  --accent-red-glow: rgba(244, 63, 94, 0.15);
+
+  /* Micro-Interactions */
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --border-spec: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--text-main);
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.02) 0px, transparent 50%);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   🧱 GLOBAL APPARATUS LAYOUT (App.jsx)
+   ========================================================================== */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-sidebar);
+  border-right: var(--border-spec);
+  padding: 2.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-brand {
+  margin: 0 0 2.5rem 0;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px var(--accent-purple-glow));
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.sidebar-btn {
+  width: 100%;
+  padding: 0.85rem 1.15rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.sidebar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-main);
+  transform: translateX(4px);
+}
+
+.sidebar-btn.active {
+  background: linear-gradient(135deg, var(--accent-purple) 0%, #4f46e5 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.sidebar-btn.active:hover {
+  transform: none;
+}
+
+.sidebar-footer {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.main-content {
+  flex: 1;
+  padding: 3rem;
+  overflow-y: auto;
+  max-width: 1200px;
+}
+
+/* ==========================================================================
+   📊 DASHBOARD SYSTEM VISUALS (Dashboard.jsx)
+   ========================================================================== */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.75rem;
+  margin-bottom: 3rem;
+}
+
+.metric-card {
+  background-color: var(--bg-surface);
+  padding: 1.75rem;
+  border-radius: 12px;
+  border: var(--border-spec);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.3s var(--ease-smooth),
+    border-color 0.3s;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.priority-panel {
+  background-color: var(--bg-surface);
+  padding: 1.75rem;
+  border-radius: 12px;
+  border: var(--border-spec);
+  box-shadow: var(--shadow-sm);
+}
+
+.priority-item {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 0.65rem;
+  border-left: 4px solid var(--accent-amber);
+  border-top: var(--border-spec);
+  border-right: var(--border-spec);
+  border-bottom: var(--border-spec);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* ==========================================================================
+   📋 TASK BOARD VISUAL MODULES (TaskBoard.jsx)
+   ========================================================================== */
+.board-grid {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.board-column {
+  flex: 1 1 250px;
+  background-color: var(--bg-surface);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: var(--border-spec);
+  min-height: 450px;
+  box-shadow: var(--shadow-sm);
+}
+
+.task-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.85rem;
+  border: var(--border-spec);
+  border-left: 4px solid var(--accent-purple);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition:
+    opacity 400ms var(--ease-smooth),
+    transform 0.3s var(--ease-smooth),
+    background-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.3),
+    0 0 12px var(--accent-purple-glow);
+}
+
+/* Sequenced Animation Classes */
+.task-card.is-strikethrough span {
+  text-decoration: line-through !important;
+  color: var(--text-muted) !important;
+  transition: color 0.3s;
+}
+
+.task-card.is-fading {
+  opacity: 0 !important;
+  transform: scale(0.95) translateY(10px) !important;
+}
+
+.badge-pill {
+  margin-left: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--accent-purple);
+  background-color: rgba(99, 102, 241, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  font-weight: 600;
+}
+
+/* Date Quick Picker Preset System Elements */
+.date-picker-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.date-pill-trigger {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: var(--border-spec);
+  color: #cbd5e1;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.date-pill-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.date-presets-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background-color: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-top: 6px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 165px;
+  backdrop-filter: blur(12px);
+}
+
+.preset-option {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preset-option:hover {
+  background-color: var(--accent-purple);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+.custom-date-field {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.3rem;
+  border-radius: 6px;
+  width: 90%;
+  margin: 0.25rem auto;
+}
+
+/* ==========================================================================
+   🎯 GOAL TRACKER SYSTEM (GoalTracker.jsx)
+   ========================================================================== */
+.goal-form {
+  background-color: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+  border: var(--border-spec);
+  box-shadow: var(--shadow-sm);
+}
+
+.goal-card {
+  background-color: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  border: var(--border-spec);
+  border-left: 5px solid var(--accent-purple);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.goal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.goal-card.completed {
+  border-left-color: var(--accent-green);
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface) 0%,
+    rgba(16, 185, 129, 0.02) 100%
+  );
+}
+
+.progress-track {
+  flex: 1;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-purple) 0%, #818cf8 100%);
+  border-radius: 20px;
+  box-shadow: 0 0 10px var(--accent-purple-glow);
+  transition: width 0.5s var(--ease-smooth);
+}
+
+.goal-card.completed .progress-fill {
+  background: linear-gradient(90deg, var(--accent-green) 0%, #34d399 100%);
+  box-shadow: 0 0 10px var(--accent-green-glow);
+}
+
+.btn-counter {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: var(--border-spec);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-elastic);
+}
+
+.btn-counter:hover {
+  background-color: var(--accent-purple);
+  border-color: transparent;
+  transform: scale(1.1);
+}
+
+.btn-counter:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   ⏱️ FOCUS COUNTDOWN LAYOUT (FocusTimer.jsx)
+   ========================================================================== */
+.timer-container {
+  max-width: 500px;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+.timer-face {
+  font-size: 6rem;
+  font-weight: 800;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  background: radial-gradient(
+    circle,
+    var(--bg-surface) 0%,
+    var(--bg-sidebar) 100%
+  );
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin: 2rem 0;
+  border: 2px solid var(--accent-purple);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px var(--accent-purple-glow);
+  letter-spacing: -3px;
+  transition:
+    border-color 0.5s var(--ease-smooth),
+    box-shadow 0.5s;
+}
+
+.timer-face.break {
+  border-color: var(--accent-green);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px var(--accent-green-glow);
+}
+
+/* ==========================================================================
+   🎨 INSPIRATION MOOD BOARD (MoodBoard.jsx)
+   ========================================================================== */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.mood-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--bg-surface);
+  border: var(--border-spec);
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.mood-card:hover {
+  transform: scale(1.03) translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.delete-overlay-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(10, 13, 20, 0.8);
+  backdrop-filter: blur(4px);
+  color: var(--accent-red);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  z-index: 2;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s var(--ease-elastic);
+}
+
+.mood-card:hover .delete-overlay-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.delete-overlay-btn:hover {
+  background: var(--accent-red);
+  color: #fff;
+  box-shadow: 0 0 12px var(--accent-red-glow);
+}
+
+/* ==========================================================================
+   ⌨️ STANDARDIZED CORE CONTROLS (Inputs, Action Buttons)
+   ========================================================================== */
+input[type="text"],
+input[type="number"] {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s var(--ease-smooth);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.btn-primary {
+  padding: 0.75rem 1.75rem;
+  background: linear-gradient(135deg, var(--accent-purple) 0%, #4f46e5 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+  filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}

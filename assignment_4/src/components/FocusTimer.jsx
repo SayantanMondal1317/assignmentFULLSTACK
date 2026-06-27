@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 export default function FocusTimer({
   timer,
@@ -18,9 +18,7 @@ export default function FocusTimer({
   const selectedTaskDetails = tasks.find((t) => t.id === linkedTaskId);
 
   return (
-    <div
-      style={{ maxWidth: "500px", margin: "2rem auto", textAlign: "center" }}
-    >
+    <div className="timer-container">
       <h2 style={{ marginBottom: "0.5rem" }}>⏱️ Focus Countdown</h2>
       <p
         style={{
@@ -29,26 +27,14 @@ export default function FocusTimer({
           fontWeight: "bold",
           letterSpacing: "1.5px",
           fontSize: "0.9rem",
+          margin: 0,
         }}
       >
         {timer.mode === "focus" ? "🎯 Focus Session Active" : "☕ Take A Break"}
       </p>
 
       {/* Main Digital Clock Display Face */}
-      <div
-        style={{
-          fontSize: "5.5rem",
-          fontWeight: "800",
-          fontFamily: "monospace",
-          background: "#1a1a1a",
-          padding: "2rem",
-          borderRadius: "12px",
-          margin: "1.5rem 0",
-          border: `2px solid ${timer.mode === "focus" ? "#646cff" : "#4caf50"}`,
-          boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
-          letterSpacing: "-2px",
-        }}
-      >
+      <div className={`timer-face ${timer.mode === "focus" ? "" : "break"}`}>
         {formattedTime}
       </div>
 

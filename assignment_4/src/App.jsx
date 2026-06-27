@@ -36,7 +36,6 @@ export default function App() {
   const [tasks, setTasks] = useLocalStorage("cipher-tasks", []);
   const [goals, setGoals] = useLocalStorage("cipher-goals", []);
   const [moodItems, setMoodItems] = useLocalStorage("cipher-mood-items", []);
-
   const [linkedTaskId, setLinkedTaskId] = useLocalStorage(
     "cipher-linked-task-id",
     "",
@@ -70,54 +69,20 @@ export default function App() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        background: "#121212",
-        color: "#ffffff",
-      }}
-    >
+    <div className="app-container">
       {/* Sidebar Navigation */}
-      <nav
-        style={{
-          width: "240px",
-          background: "#1a1a1a",
-          padding: "2rem 1rem",
-          borderRight: "1px solid #333",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <h2
-          style={{
-            margin: "0 0 2rem 0",
-            color: "#646cff",
-            letterSpacing: "1px",
-            textAlign: "center",
-          }}
+      <nav className="sidebar">
+        <h2 className="sidebar-brand">CIPHER</h2>
+
+        <ul
+          className="sidebar-nav"
+          style={{ listStyle: "none", padding: 0, margin: 0 }}
         >
-          CIPHER
-        </h2>
-        <ul style={{ listStyle: "none", padding: 0, margin: 0, flex: 1 }}>
           {["dashboard", "tasks", "goals", "timer", "mood"].map((section) => (
-            <li key={section} style={{ marginBottom: "0.5rem" }}>
+            <li key={section}>
               <button
                 onClick={() => setActiveSection(section)}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem 1rem",
-                  textAlign: "left",
-                  background:
-                    activeSection === section ? "#646cff" : "transparent",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  textTransform: "capitalize",
-                  fontWeight: activeSection === section ? "600" : "400",
-                  transition: "background 0.2s ease",
-                }}
+                className={`sidebar-btn ${activeSection === section ? "active" : ""}`}
               >
                 {section === "timer"
                   ? "⏱️ Focus Timer"
@@ -132,22 +97,12 @@ export default function App() {
             </li>
           ))}
         </ul>
-        <div style={{ fontSize: "0.8rem", color: "#666", textAlign: "center" }}>
-          MVP v1.0.0
-        </div>
+
+        <div className="sidebar-footer">MVP v1.0.0</div>
       </nav>
 
       {/* Main Content Window Area */}
-      <main
-        style={{
-          flex: 1,
-          padding: "2.5rem",
-          overflowY: "auto",
-          background: "#121212",
-        }}
-      >
-        {renderSection()}
-      </main>
+      <main className="main-content">{renderSection()}</main>
     </div>
   );
 }

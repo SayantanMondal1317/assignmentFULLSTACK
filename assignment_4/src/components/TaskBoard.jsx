@@ -3,11 +3,37 @@ import React, { useState } from "react";
 export default function TaskBoard({ tasks, setTasks }) {
   const [newTitle, setNewTitle] = useState("");
 
-  // UI states for inline edits, subtask additions, and animations
+  // UI Management States
   const [editingId, setEditingId] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
-  const [subtaskInputs, setSubtaskInputs] = useState({}); // tracking input values per parent task
+  const [subtaskInputs, setSubtaskInputs] = useState({});
+  const [activeDateDropdownId, setActiveDateDropdownId] = useState(null);
+  const [isCompletedCollapsed, setIsCompletedCollapsed] = useState(true);
+
+  // Advanced Animation State Tracks
+  const [strikethroughIds, setStrikethroughIds] = useState(new Set());
   const [fadingIds, setFadingIds] = useState(new Set());
+
+  // Helper: Generate structured absolute ISO date strings relative to today
+  const getDatePresetString = (presetType) => {
+    const today = new Date();
+    if (presetType === "today") {
+      return today.toLocaleDateString("en-CA");
+    }
+    if (presetType === "tomorrow") {
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      return tomorrow.toLocaleDateString("en-CA");
+    }
+    if (presetType === "this-week") {
+      const currentDay = today.getDay();
+      const distanceToSunday = 7 - currentDay;
+      const endOfWeek = new Date(today);
+      endOfWeek.setDate(today.getDate() + distanceToSunday);
+      return endOfWeek.toLocaleDateString("en-CA");
+    }
+    return null;
+  };
 
   // 1. Quick Add Top-Level Task
   const handleAddTask = (e) => {
@@ -26,7 +52,7 @@ export default function TaskBoard({ tasks, setTasks }) {
     setNewTitle("");
   };
 
-  // 2. Add a Subtask referencing a parent
+  // 2. Add Flat Subtask (Kept 100% relational via parentId, zero nesting)
   const handleAddSubtask = (e, parentId) => {
     e.preventDefault();
     const subtaskText = subtaskInputs[parentId] || "";
@@ -37,66 +63,99 @@ export default function TaskBoard({ tasks, setTasks }) {
       title: subtaskText.trim(),
       deadline: null,
       isCompleted: false,
-      parentId: parentId, // Linked to parent
+      parentId: parentId,
     };
 
     setTasks((prev) => [...prev, newSubtask]);
     setSubtaskInputs((prev) => ({ ...prev, [parentId]: "" }));
   };
 
-  // 3. Delayed Cascading Completion Trigger
+  // 3. Sequenced Animation Completion Controller
   const handleToggleComplete = (id, isSubtask = false, parentId = null) => {
-    // Add target to fading animation set
-    setFadingIds((prev) => {
+    setStrikethroughIds((prev) => {
       const next = new Set(prev);
       next.add(id);
       return next;
     });
 
     setTimeout(() => {
-      setTasks((prevTasks) => {
-        if (!isSubtask) {
-          // Case A: Toggling a Parent Task -> updates parent and cascades to all subtasks
-          const currentParent = prevTasks.find((t) => t.id === id);
-          const nextTargetState = !currentParent.isCompleted;
-
-          return prevTasks.map((task) => {
-            if (task.id === id)
-              return { ...task, isCompleted: nextTargetState };
-            if (task.parentId === id)
-              return { ...task, isCompleted: nextTargetState };
-            return task;
-          });
-        } else {
-          // Case B: Toggling a Subtask -> updates child, then recalculates parent
-          const updatedTasks = prevTasks.map((task) =>
-            task.id === id ? { ...task, isCompleted: !task.isCompleted } : task,
-          );
-
-          // Find all sibling subtasks for this parent
-          const siblings = updatedTasks.filter((t) => t.parentId === parentId);
-          const allSiblingsDone = siblings.every((s) => s.isCompleted);
-
-          // If all child subtasks are checked off, mark the parent complete too
-          return updatedTasks.map((task) => {
-            if (task.id === parentId) {
-              return { ...task, isCompleted: allSiblingsDone };
-            }
-            return task;
-          });
-        }
-      });
-
-      // Clear fading animation state
       setFadingIds((prev) => {
         const next = new Set(prev);
-        next.delete(id);
+        next.add(id);
         return next;
       });
+
+      setTimeout(() => {
+        setTasks((prevTasks) => {
+          if (!isSubtask) {
+            const currentParent = prevTasks.find((t) => t.id === id);
+            const nextTargetState = !currentParent.isCompleted;
+
+            return prevTasks.map((task) => {
+              if (task.id === id)
+                return { ...task, isCompleted: nextTargetState };
+              if (task.parentId === id)
+                return { ...task, isCompleted: nextTargetState };
+              return task;
+            });
+          } else {
+            const updatedTasks = prevTasks.map((task) =>
+              task.id === id
+                ? { ...task, isCompleted: !task.isCompleted }
+                : task,
+            );
+
+            const siblings = updatedTasks.filter(
+              (t) => t.parentId === parentId,
+            );
+            const allSiblingsDone = siblings.every((s) => s.isCompleted);
+
+            return updatedTasks.map((task) => {
+              if (task.id === parentId) {
+                return { ...task, isCompleted: allSiblingsDone };
+              }
+              return task;
+            });
+          }
+        });
+
+        setStrikethroughIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
+        setFadingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
+      }, 400);
     }, 400);
   };
 
-  // 4. Inline Editing
+  // 4. Update Deadlines via Preset Router
+  const handleApplyDeadlinePreset = (id, presetType, customValue = null) => {
+    const targetDate = customValue || getDatePresetString(presetType);
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, deadline: targetDate } : task,
+      ),
+    );
+    setActiveDateDropdownId(null);
+  };
+
+  // 5. Clear All Archive Records Entirely
+  const handleClearArchive = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to permanently clear all completed archived tasks?",
+      )
+    ) {
+      setTasks((prev) => prev.filter((task) => !task.isCompleted));
+    }
+  };
+
+  // Inline Controls
   const startEditing = (id, currentTitle) => {
     setEditingId(id);
     setEditingTitle(currentTitle);
@@ -112,28 +171,14 @@ export default function TaskBoard({ tasks, setTasks }) {
     setEditingId(null);
   };
 
-  // 5. Update Deadlines
-  const handleUpdateDeadline = (id, dateValue) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, deadline: dateValue || null } : task,
-      ),
-    );
-  };
-
-  // 6. Cascading Deletion
   const handleDeleteTask = (id, isSubtask = false) => {
     setTasks((prev) => {
-      if (isSubtask) {
-        return prev.filter((task) => task.id !== id);
-      } else {
-        // Delete parent AND all children matching parentId
-        return prev.filter((task) => task.id !== id && task.parentId !== id);
-      }
+      if (isSubtask) return prev.filter((task) => task.id !== id);
+      return prev.filter((task) => task.id !== id && task.parentId !== id);
     });
   };
 
-  // 7. Dynamic Grouping (Excludes subtasks and completed parent items)
+  // Derived Sorting Data Engine
   const groupTasks = (taskList) => {
     const todayStr = new Date().toLocaleDateString("en-CA");
     const groups = { overdue: [], today: [], upcoming: [], noDate: [] };
@@ -156,30 +201,82 @@ export default function TaskBoard({ tasks, setTasks }) {
   };
 
   const { overdue, today, upcoming, noDate } = groupTasks(tasks);
+  const completedTasksList = tasks.filter(
+    (task) => !task.parentId && task.isCompleted,
+  );
 
-  // Core Master Task Component Renderer
+  // Sub-Component Dropdown Preset Component
+  const renderDatePickerMenu = (task) => {
+    const isOpen = activeDateDropdownId === task.id;
+    return (
+      <div className="date-picker-wrapper">
+        <button
+          type="button"
+          className="date-pill-trigger"
+          onClick={() => setActiveDateDropdownId(isOpen ? null : task.id)}
+        >
+          📅 {task.deadline ? task.deadline : "Set Deadline"}
+        </button>
+
+        {isOpen && (
+          <div className="date-presets-dropdown">
+            <button
+              type="button"
+              className="preset-option"
+              onClick={() => handleApplyDeadlinePreset(task.id, "today")}
+            >
+              ☀️ Today
+            </button>
+            <button
+              type="button"
+              className="preset-option"
+              onClick={() => handleApplyDeadlinePreset(task.id, "tomorrow")}
+            >
+              🌅 Tomorrow
+            </button>
+            <button
+              type="button"
+              className="preset-option"
+              onClick={() => handleApplyDeadlinePreset(task.id, "this-week")}
+            >
+              📅 This Week
+            </button>
+            <hr
+              style={{
+                border: "0",
+                borderTop: "1px solid #333",
+                margin: "2px 0",
+              }}
+            />
+            <input
+              type="date"
+              className="custom-date-field"
+              value={task.deadline || ""}
+              onChange={(e) =>
+                handleApplyDeadlinePreset(task.id, "custom", e.target.value)
+              }
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Card Grid Row Component
   const renderTaskCard = (parentTask) => {
+    const isStruck = strikethroughIds.has(parentTask.id);
     const isFading = fadingIds.has(parentTask.id);
 
-    // Derived values for subtask progress tracking
     const subtasks = tasks.filter((t) => t.parentId === parentTask.id);
     const completedSubtasksCount = subtasks.filter((t) => t.isCompleted).length;
     const hasSubtasks = subtasks.length > 0;
 
+    let cardClasses = "task-card";
+    if (isStruck) cardClasses += " is-strikethrough";
+    if (isFading) cardClasses += " is-fading";
+
     return (
-      <li
-        key={parentTask.id}
-        style={{
-          background: "#262626",
-          padding: "0.85rem",
-          borderRadius: "6px",
-          marginBottom: "0.75rem",
-          borderLeft: "4px solid #646cff",
-          opacity: isFading ? 0 : 1,
-          transition: "opacity 400ms ease",
-        }}
-      >
-        {/* Parent Main Flex Container */}
+      <li key={parentTask.id} className={cardClasses}>
         <div
           style={{
             display: "flex",
@@ -226,16 +323,7 @@ export default function TaskBoard({ tasks, setTasks }) {
             >
               {parentTask.title}
               {hasSubtasks && (
-                <span
-                  style={{
-                    marginLeft: "0.5rem",
-                    fontSize: "0.8rem",
-                    color: "#646cff",
-                    background: "#1a1a1a",
-                    padding: "0.1rem 0.4rem",
-                    borderRadius: "10px",
-                  }}
-                >
+                <span className="badge-pill">
                   {completedSubtasksCount}/{subtasks.length} Done
                 </span>
               )}
@@ -255,7 +343,6 @@ export default function TaskBoard({ tasks, setTasks }) {
           </button>
         </div>
 
-        {/* Inline Properties & Subtask Section */}
         <div
           style={{
             paddingLeft: "1.5rem",
@@ -264,29 +351,8 @@ export default function TaskBoard({ tasks, setTasks }) {
             gap: "0.5rem",
           }}
         >
-          {/* Deadline Picker */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <span style={{ fontSize: "0.75rem", color: "#888" }}>
-              📅 Deadline:
-            </span>
-            <input
-              type="date"
-              value={parentTask.deadline || ""}
-              onChange={(e) =>
-                handleUpdateDeadline(parentTask.id, e.target.value)
-              }
-              style={{
-                background: "#1a1a1a",
-                border: "1px solid #444",
-                borderRadius: "4px",
-                color: "#fff",
-                fontSize: "0.75rem",
-                padding: "0.1rem",
-              }}
-            />
-          </div>
+          {renderDatePickerMenu(parentTask)}
 
-          {/* Subtask List Render */}
           {hasSubtasks && (
             <ul
               style={{
@@ -297,54 +363,59 @@ export default function TaskBoard({ tasks, setTasks }) {
                 paddingLeft: "0.75rem",
               }}
             >
-              {subtasks.map((sub) => (
-                <li
-                  key={sub.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    margin: "0.35rem 0",
-                    opacity: fadingIds.has(sub.id) ? 0 : 1,
-                    transition: "opacity 400ms ease",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={sub.isCompleted}
-                    onChange={() =>
-                      handleToggleComplete(sub.id, true, parentTask.id)
-                    }
-                    style={{ width: "14px", height: "14px", cursor: "pointer" }}
-                  />
-                  <span
+              {subtasks.map((sub) => {
+                const subStruck =
+                  strikethroughIds.has(sub.id) || sub.isCompleted;
+                return (
+                  <li
+                    key={sub.id}
                     style={{
-                      fontSize: "0.85rem",
-                      color: sub.isCompleted ? "#666" : "#ddd",
-                      textDecoration: sub.isCompleted ? "line-through" : "none",
-                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      margin: "0.35rem 0",
                     }}
                   >
-                    {sub.title}
-                  </span>
-                  <button
-                    onClick={() => handleDeleteTask(sub.id, true)}
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      color: "#aa3333",
-                      cursor: "pointer",
-                      fontSize: "0.8rem",
-                    }}
-                  >
-                    ✕
-                  </button>
-                </li>
-              ))}
+                    <input
+                      type="checkbox"
+                      checked={sub.isCompleted}
+                      onChange={() =>
+                        handleToggleComplete(sub.id, true, parentTask.id)
+                      }
+                      style={{
+                        width: "14px",
+                        height: "14px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: "0.85rem",
+                        color: subStruck ? "#666" : "#ddd",
+                        textDecoration: subStruck ? "line-through" : "none",
+                        flex: 1,
+                      }}
+                    >
+                      {sub.title}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteTask(sub.id, true)}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: "#aa3333",
+                        cursor: "pointer",
+                        fontSize: "0.8rem",
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
 
-          {/* Quick-add Subtask Form input field */}
           <form
             onSubmit={(e) => handleAddSubtask(e, parentTask.id)}
             style={{ display: "flex", gap: "0.25rem", marginTop: "0.25rem" }}
@@ -376,20 +447,14 @@ export default function TaskBoard({ tasks, setTasks }) {
   };
 
   const renderColumnList = (title, itemsList, titleColor = "#ffffff") => (
-    <div
-      style={{
-        flex: "1 1 230px",
-        background: "#1a1a1a",
-        padding: "1rem",
-        borderRadius: "8px",
-      }}
-    >
+    <div className="board-column">
       <h3
         style={{
           margin: "0 0 1rem 0",
           color: titleColor,
-          borderBottom: "1px solid #333",
+          borderBottom: "1px solid #2a2a2a",
           paddingBottom: "0.5rem",
+          fontSize: "1rem",
         }}
       >
         {title} ({itemsList.length})
@@ -397,7 +462,9 @@ export default function TaskBoard({ tasks, setTasks }) {
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
         {itemsList.map((task) => renderTaskCard(task))}
         {itemsList.length === 0 && (
-          <p style={{ color: "#555", fontSize: "0.9rem", fontStyle: "italic" }}>
+          <p
+            style={{ color: "#555", fontSize: "0.85rem", fontStyle: "italic" }}
+          >
             No tasks
           </p>
         )}
@@ -418,44 +485,135 @@ export default function TaskBoard({ tasks, setTasks }) {
           placeholder="Quick add a new main task (Press Enter)..."
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
-          style={{
-            flex: 1,
-            padding: "0.75rem 1rem",
-            background: "#1a1a1a",
-            border: "1px solid #333",
-            borderRadius: "6px",
-            color: "#fff",
-            fontSize: "1rem",
-          }}
+          style={{ flex: 1 }}
         />
-        <button
-          type="submit"
-          style={{
-            padding: "0.75rem 1.5rem",
-            background: "#646cff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "600",
-          }}
-        >
+        <button type="submit" className="btn-primary">
           Add Task
         </button>
       </form>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          flexWrap: "wrap",
-          alignItems: "flex-start",
-        }}
-      >
+      <div className="board-grid">
         {renderColumnList("⚠️ Overdue", overdue, "#ff4a4a")}
         {renderColumnList("☀️ Today", today, "#ffb703")}
         {renderColumnList("📅 Upcoming", upcoming, "#2196f3")}
         {renderColumnList("⚪ No Date", noDate, "#aaa")}
+      </div>
+
+      {/* COMPONENT DRAWER: Collapsed Completed Section */}
+      <div
+        style={{
+          marginTop: "3rem",
+          borderTop: "1px solid #2a2a2a",
+          paddingTop: "1.5rem",
+        }}
+      >
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <button
+            onClick={() => setIsCompletedCollapsed(!isCompletedCollapsed)}
+            style={{
+              background: "#1a1a1a",
+              border: "1px solid #333",
+              color: "#aaa",
+              padding: "0.5rem 1rem",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontWeight: "600",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            {isCompletedCollapsed ? "▶ Show" : "▼ Hide"} Completed Archive (
+            {completedTasksList.length})
+          </button>
+
+          {completedTasksList.length > 0 && (
+            <button
+              onClick={handleClearArchive}
+              style={{
+                background: "transparent",
+                border: "1px solid #ff4a4a",
+                color: "#ff4a4a",
+                padding: "0.5rem 1rem",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: "600",
+                fontSize: "0.85rem",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "rgba(255, 74, 74, 0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "transparent";
+              }}
+            >
+              🗑️ Clear Archive
+            </button>
+          )}
+        </div>
+
+        {!isCompletedCollapsed && (
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              marginTop: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+              maxWidth: "600px",
+            }}
+          >
+            {completedTasksList.map((task) => (
+              <li
+                key={task.id}
+                style={{
+                  background: "#161616",
+                  padding: "0.75rem",
+                  borderRadius: "6px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  borderLeft: "4px solid #4caf50",
+                }}
+              >
+                <span
+                  style={{
+                    textDecoration: "line-through",
+                    color: "#555",
+                    flex: 1,
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  {task.title}
+                </span>
+                <button
+                  onClick={() => handleDeleteTask(task.id, false)}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    color: "#ff4a4a",
+                    cursor: "pointer",
+                  }}
+                >
+                  🗑️
+                </button>
+              </li>
+            ))}
+            {completedTasksList.length === 0 && (
+              <p
+                style={{
+                  color: "#444",
+                  fontStyle: "italic",
+                  fontSize: "0.85rem",
+                }}
+              >
+                No archived history found.
+              </p>
+            )}
+          </ul>
+        )}
       </div>
     </div>
   );
