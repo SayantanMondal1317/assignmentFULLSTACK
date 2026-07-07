@@ -1,20 +1,20 @@
-# 🌌 Cipher — Modular Productivity Workspace MVP
+# Cipher — Modular Productivity Workspace MVP
 
 Cipher is a high-performance, single-page productivity dashboard built completely in vanilla **React**. It features real-time macro-goal telemetry, localized subtask cascading hierarchies, a global background focus engine, and a dynamic inspiration mood board—all executing smoothly on a lightweight, state-driven architecture.
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-- 📊 **Executive Dashboard:** Real-time metrics calculating total cleared tasks and global macro-goal alignment via derived state equations.
-- 📋 **Hierarchical Task Board:** Flat-array task engine supporting cascading subtask creation, completion counters (`1/2 Done`), a 400ms CSS animation exit sweep, and a collapsible archive drawer with a permanent manual purge control.
-- 🎯 **Metric Goal Tracker:** Quantifiable macro-target rows complete with clamped increment/decrement click controllers and linear gradient progress trackers.
-- ⏱️ **Persistent Focus Timer:** A background-ticking countdown machine built on a custom hook wrapper that keeps processing state across route switches and locks onto specific board objectives.
-- 🎨 **Inspiration Mood Board:** An intelligent grid canvas that auto-detects inputs (HEX codes, valid web images, or text) to render custom pinned visual cards.
+- **Executive Dashboard:** Real-time metrics calculating total cleared tasks and global macro-goal alignment via derived state equations.
+- **Hierarchical Task Board:** Flat-array task engine supporting cascading subtask creation, completion counters (`1/2 Done`), a 400ms CSS animation exit sweep, and a collapsible archive drawer with a permanent manual purge control.
+- **Metric Goal Tracker:** Quantifiable macro-target rows complete with clamped increment/decrement click controllers and linear gradient progress trackers.
+- **Persistent Focus Timer:** A background-ticking countdown machine built on a custom hook wrapper that keeps processing state across route switches and locks onto specific board objectives.
+- **Inspiration Mood Board:** An intelligent grid canvas that auto-detects inputs (HEX codes, valid web images, or text) to render custom pinned visual cards.
 
 ---
 
-## 🛠️ Technical Design Constraints & Architecture
+## Technical Design Constraints & Architecture
 
 This application was engineered under strict production constraints to prove the power of foundational React state mechanics over heavy external state managers.
 
@@ -26,7 +26,7 @@ This application was engineered under strict production constraints to prove the
 
 ---
 
-## ⚙️ Installation & Local Setup
+## Installation & Local Setup
 
 To spin up this workspace environment locally, ensure you have [Node.js](https://nodejs.org/) installed, then execute the following sequence in your terminal:
 
@@ -52,7 +52,7 @@ Open your local browser to the outputted URL (typically http://localhost:5173) t
 
 ---
 
-## 📁 Project Architecture & Directory Layout
+## Project Architecture & Directory Layout
 
 The workspace is organized using a highly modular component structure separating global custom React hooks, layout modules, and UI rendering layers.
 
@@ -74,7 +74,7 @@ src/
 
 ---
 
-## 📊 Data Schemas & State Shapes Spec
+## Data Schemas & State Shapes Spec
 
 To support a zero-Context prop-drilled architecture and prepare for future database normalization, the application maintains completely flat state arrays. Relational mapping is achieved using unique reference pointers (parentId) instead of multi-layered object nesting.
 
@@ -119,7 +119,7 @@ State Cleanup Note: When a user triggers the archive purge action, the array fil
 
 ---
 
-## ⚙️ Core Engine Breakdown (Custom Hooks)
+## Core Engine Breakdown (Custom Hooks)
 
 The core mechanics of Cipher rely on two specialized, self-contained custom hooks designed to handle complex background processes and state synchronization efficiently.
 
@@ -170,7 +170,7 @@ Memory Leak Mitigation: The hook implements a strict useEffect cleanup return st
 
 ---
 
-## 🧩 Feature Module Highlights & Derived Algorithmic Logic
+## Feature Module Highlights & Derived Algorithmic Logic
 
 Cipher minimizes memory overhead by running intensive computations dynamically during the component render pass rather than storing duplicate values in React state.
 
@@ -250,7 +250,7 @@ const detectType = (str) => {
 
 ---
 
-## 🗂️ Component Topology & Interface Contracts
+## Component Topology & Interface Contracts
 
 Because this workspace relies entirely on vanilla state lifting and standard prop drilling without an external state broker, maintaining a rigid, predictable unidirectional data highway is critical. Below is the structural hierarchy mapping out how data streams downward from the primary application shell container.
 
@@ -279,7 +279,7 @@ To ensure strict compliance with our normalized flat data structure, each module
 
 ---
 
-## 🧪 Verification Matrix & Critical Test Workflows
+## Verification Matrix & Critical Test Workflows
 
 To ensure the integrity of Cipher’s zero-Context data highway, the following playbook details the exact step-by-step manual testing procedures required to verify state synchronization, functional boundary clamping, and relational cascading logic.
 
@@ -315,7 +315,7 @@ To ensure the integrity of Cipher’s zero-Context data highway, the following p
 
 ---
 
-## 🎨 Viewport Normalization & UI Design Token System
+## Viewport Normalization & UI Design Token System
 
 To eliminate inline style pollution and ensure a consistent aesthetic across all layout views, Cipher consolidates its visual presentation layer into a centralized stylesheet (`src/index.css`). The workspace adheres to an optimized low-fatigue dark UI spec built on modern CSS layout engines.
 
@@ -404,7 +404,7 @@ gap: 1.25rem;
 
 ---
 
-## 🔮 Architectural Evolution Roadmap (Backend Integration Readiness)
+## Architectural Evolution Roadmap (Backend Integration Readiness)
 
 Cipher's frontend architecture was deliberately designed to serve as a decoupled client layer ready for seamless database and API synchronization. As the workspace evolves beyond a localized application, the state hooks are positioned for an enterprise upgrade pattern.
 
