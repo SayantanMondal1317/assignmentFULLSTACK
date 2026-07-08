@@ -256,7 +256,7 @@ export default function TaskBoard({ tasks, setTasks, subtasks, setSubtasks }) {
                     )}
 
                     <span style={{ fontSize: "0.8rem", color: "#666" }}>
-                      {task.dueDate ? `${task.dueDate}` : "No deadline"}
+                      {task.dueDate ? `Due: ${task.dueDate}` : "No deadline"}
                     </span>
                   </div>
 
