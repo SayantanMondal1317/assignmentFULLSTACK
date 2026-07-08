@@ -1,159 +1,129 @@
-import React from "react";
+import React, { useState } from "react";
+import { useTimer } from "../hooks/useTimer";
 
-export default function FocusTimer({
-  timer,
-  tasks,
-  linkedTaskId,
-  setLinkedTaskId,
-}) {
-  // Format calculation: converts flat integer seconds into readable 00:00 strings
-  const minutes = Math.floor(timer.secondsLeft / 60);
-  const seconds = timer.secondsLeft % 60;
-  const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+export default function FocusTimer({ tasks }) {
+  const { secondsRemaining, isRunning, start, pause, reset } = useTimer(1500);
+  const [selectedTaskId, setSelectedTaskId] = useState("");
 
-  // Filter out subtasks and fully finished tasks to populate the session selection list
-  const activeTopTasks = tasks.filter(
-    (task) => !task.parentId && !task.isCompleted,
-  );
-  const selectedTaskDetails = tasks.find((t) => t.id === linkedTaskId);
+  const formatTime = (secs) => {
+    const mins = Math.floor(secs / 60)
+      .toString()
+      .padStart(2, "0");
+    const remainingSecs = (secs % 60).toString().padStart(2, "0");
+    return `${mins}:${remainingSecs}`;
+  };
+
+  const activeTask = tasks.find((t) => t.id === selectedTaskId);
+  const incompleteTasks = tasks.filter((t) => !t.completed);
 
   return (
-    <div className="timer-container">
-      <h2 style={{ marginBottom: "0.5rem" }}>⏱️ Focus Countdown</h2>
-      <p
-        style={{
-          color: timer.mode === "focus" ? "#646cff" : "#4caf50",
-          textTransform: "uppercase",
-          fontWeight: "bold",
-          letterSpacing: "1.5px",
-          fontSize: "0.9rem",
-          margin: 0,
-        }}
-      >
-        {timer.mode === "focus" ? "🎯 Focus Session Active" : "☕ Take A Break"}
-      </p>
+    <div
+      style={{
+        maxWidth: "450px",
+        margin: "2rem auto",
+        textAlign: "center",
+        background: "#fff",
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+      }}
+    >
+      <h2 style={{ marginBottom: "1.5rem", color: "#495057" }}>
+        Focus Countdown
+      </h2>
 
-      {/* Main Digital Clock Display Face */}
-      <div className={`timer-face ${timer.mode === "focus" ? "" : "break"}`}>
-        {formattedTime}
-      </div>
-
-      {/* Control Switch Buttons */}
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "1rem",
-          marginBottom: "2.5rem",
+          fontSize: "4.5rem",
+          fontWeight: "bold",
+          fontFamily: "monospace",
+          margin: "1rem 0",
+          color: "#212529",
         }}
       >
-        {!timer.isRunning ? (
+        {formatTime(secondsRemaining)}
+      </div>
+
+      <div style={{ marginBottom: "1.5rem" }}>
+        <select
+          value={selectedTaskId}
+          onChange={(e) => setSelectedTaskId(e.target.value)}
+          style={{
+            padding: "0.5rem",
+            width: "100%",
+            borderRadius: "4px",
+            border: "1px solid #ced4da",
+          }}
+        >
+          <option value="">Associate an incomplete task</option>
+          {incompleteTasks.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {activeTask && (
+        <div
+          style={{
+            background: "#e3fafc",
+            color: "#0b7285",
+            padding: "0.75rem",
+            borderRadius: "6px",
+            marginBottom: "1.5rem",
+            fontWeight: "bold",
+          }}
+        >
+          Focusing on: {activeTask.title}
+        </div>
+      )}
+
+      <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
+        {!isRunning ? (
           <button
-            onClick={timer.start}
+            onClick={start}
             style={{
-              padding: "0.75rem 2rem",
-              background: "#4caf50",
+              padding: "0.6rem 1.5rem",
+              background: "#40c057",
               color: "#fff",
               border: "none",
-              borderRadius: "6px",
+              borderRadius: "4px",
               cursor: "pointer",
-              fontWeight: "600",
-              fontSize: "1rem",
+              fontWeight: "bold",
             }}
           >
-            Start Focus
+            Start
           </button>
         ) : (
           <button
-            onClick={timer.pause}
+            onClick={pause}
             style={{
-              padding: "0.75rem 2rem",
-              background: "#ffb703",
-              color: "#000",
+              padding: "0.6rem 1.5rem",
+              background: "#fab005",
+              color: "#fff",
               border: "none",
-              borderRadius: "6px",
+              borderRadius: "4px",
               cursor: "pointer",
-              fontWeight: "600",
-              fontSize: "1rem",
+              fontWeight: "bold",
             }}
           >
-            Pause Session
+            Pause
           </button>
         )}
-
         <button
-          onClick={timer.reset}
+          onClick={() => reset(1500)}
           style={{
-            padding: "0.75rem 2rem",
-            background: "#222",
-            color: "#aaa",
-            border: "1px solid #444",
-            borderRadius: "6px",
+            padding: "0.6rem 1.5rem",
+            background: "#868e96",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
             cursor: "pointer",
-            fontWeight: "600",
-            fontSize: "1rem",
           }}
         >
           Reset
         </button>
-      </div>
-
-      {/* BONUS FEATURE: Focus-on-Task Dropdown Linking Panel */}
-      <div
-        style={{
-          background: "#1a1a1a",
-          padding: "1.25rem",
-          borderRadius: "8px",
-          border: "1px solid #333",
-        }}
-      >
-        <label
-          style={{
-            display: "block",
-            fontSize: "0.85rem",
-            color: "#888",
-            marginBottom: "0.5rem",
-            textAlign: "left",
-          }}
-        >
-          Link Session to a Specific Objective:
-        </label>
-        <select
-          value={linkedTaskId}
-          onChange={(e) => setLinkedTaskId(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "0.6rem",
-            background: "#111",
-            border: "1px solid #444",
-            borderRadius: "4px",
-            color: "#fff",
-            cursor: "pointer",
-          }}
-        >
-          <option value="">-- No Active Task Selected --</option>
-          {activeTopTasks.map((task) => (
-            <option key={task.id} value={task.id}>
-              {task.title}
-            </option>
-          ))}
-        </select>
-
-        {timer.isRunning && selectedTaskDetails && (
-          <div
-            style={{
-              marginTop: "1rem",
-              fontSize: "0.9rem",
-              color: "#aaa",
-              background: "#222",
-              padding: "0.5rem",
-              borderRadius: "4px",
-              fontStyle: "italic",
-            }}
-          >
-            ⚡ Focusing on: <strong>"{selectedTaskDetails.title}"</strong>
-          </div>
-        )}
       </div>
     </div>
   );

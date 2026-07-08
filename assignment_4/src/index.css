@@ -1,418 +1,111 @@
-/* ==========================================================================
-   🌌 CIPHER DARK SYSTEM STYLING SPEC
-   ========================================================================== */
-
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: dark;
-  color: #ffffff;
-  background-color: #121212;
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
 }
 
 body {
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #121212;
 }
 
-/* ==========================================================================
-   🧱 GLOBAL APPARATUS LAYOUT (App.jsx)
-   ========================================================================== */
-.app-container {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 260px;
-  background-color: #181818;
-  border-right: 1px solid #2a2a2a;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.sidebar-brand {
-  margin: 0 0 2rem 0;
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: 2px;
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
   text-align: center;
-  color: #646cff;
-}
-
-.sidebar-nav {
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
+  box-sizing: border-box;
 }
 
-.sidebar-btn {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  color: #aaa;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  text-align: left;
-  font-size: 0.95rem;
+h1,
+h2 {
+  font-family: var(--heading);
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: all 0.2s ease;
+  color: var(--text-h);
 }
 
-.sidebar-btn:hover {
-  background-color: #222;
-  color: #fff;
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
 }
 
-.sidebar-btn.active {
-  background-color: #646cff;
-  color: #fff;
-  font-weight: 600;
-}
-
-.sidebar-footer {
-  font-size: 0.75rem;
-  color: #444;
-  text-align: center;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2.5rem;
-  overflow-y: auto;
-  max-width: 1200px;
-}
-
-/* ==========================================================================
-   📊 DASHBOARD SYSTEM VISUALS (Dashboard.jsx)
-   ========================================================================== */
-.metric-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.metric-card {
-  background-color: #1a1a1a;
-  padding: 1.5rem;
-  border-radius: 10px;
-  border: 1px solid #2a2a2a;
-}
-
-.priority-panel {
-  background-color: #1a1a1a;
-  padding: 1.5rem;
-  border-radius: 10px;
-  border: 1px solid #2a2a2a;
-}
-
-.priority-item {
-  background-color: #222;
-  padding: 0.85rem 1rem;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-  border-left: 4px solid #ffb703;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* ==========================================================================
-   📋 TASK BOARD VISUAL MODULES (TaskBoard.jsx)
-   ========================================================================== */
-.board-grid {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-.board-column {
-  flex: 1 1 240px;
-  background-color: #1a1a1a;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #222;
-  min-height: 400px;
-}
-
-.task-card {
-  background-color: #262626;
-  padding: 0.85rem;
-  border-radius: 6px;
-  margin-bottom: 0.75rem;
-  border-left: 4px solid #646cff;
-  transition:
-    opacity 400ms ease,
-    transform 0.3s ease;
-  opacity: 1;
-}
-
-/* Sequenced Animation Classes */
-.task-card.is-strikethrough span {
-  text-decoration: line-through !important;
-  color: #666 !important;
-}
-
-.task-card.is-fading {
-  opacity: 0 !important;
-}
-
-.badge-pill {
-  margin-left: 0.5rem;
-  font-size: 0.75rem;
-  color: #646cff;
-  background-color: #111;
-  padding: 0.15rem 0.4rem;
-  border-radius: 10px;
-  border: 1px solid #333;
-}
-
-/* Date Quick Picker Preset System Elements */
-.date-picker-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.date-pill-trigger {
-  background-color: #1e1e1e;
-  border: 1px solid #3a3a3a;
-  color: #ddd;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  cursor: pointer;
+code,
+.counter {
+  font-family: var(--mono);
   display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  transition: background-color 0.2s;
-}
-
-.date-pill-trigger:hover {
-  background-color: #2d2d2d;
-  color: #fff;
-}
-
-.date-presets-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 100;
-  background-color: #222;
-  border: 1px solid #444;
-  border-radius: 6px;
-  padding: 0.4rem;
-  margin-top: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 140px;
-}
-
-.preset-option {
-  background: transparent;
-  border: none;
-  color: #bbb;
-  padding: 0.35rem 0.6rem;
   border-radius: 4px;
-  text-align: left;
-  font-size: 0.8rem;
-  cursor: pointer;
+  color: var(--text-h);
 }
 
-.preset-option:hover {
-  background-color: #646cff;
-  color: #fff;
-}
-
-.custom-date-field {
-  background-color: #111;
-  border: 1px solid #444;
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 0.2rem;
-  border-radius: 4px;
-  width: 90%;
-  margin: 0.2rem auto;
-}
-
-/* ==========================================================================
-   🎯 GOAL TRACKER SYSTEM (GoalTracker.jsx)
-   ========================================================================== */
-.goal-form {
-  background-color: #1a1a1a;
-  padding: 1.25rem;
-  border-radius: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: flex-end;
-  margin-bottom: 2rem;
-  border: 1px solid #2a2a2a;
-}
-
-.goal-card {
-  background-color: #1a1a1a;
-  padding: 1.25rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  border-left: 4px solid #646cff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.goal-card.completed {
-  border-left-color: #4caf50;
-}
-
-.progress-track {
-  flex: 1;
-  height: 12px;
-  background-color: #111;
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #646cff, #9097ff);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.goal-card.completed .progress-fill {
-  background: linear-gradient(90deg, #4caf50, #81c784);
-}
-
-.btn-counter {
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  background-color: #2d2d2d;
-  color: #fff;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
-}
-
-.btn-counter:hover {
-  background-color: #3d3d3d;
-}
-
-/* ==========================================================================
-   ⏱️ FOCUS COUNTDOWN LAYOUT (FocusTimer.jsx)
-   ========================================================================== */
-.timer-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  text-align: center;
-}
-
-.timer-face {
-  font-size: 5.5rem;
-  font-weight: 800;
-  font-family: monospace;
-  background-color: #1a1a1a;
-  padding: 2rem;
-  border-radius: 12px;
-  margin: 1.5rem 0;
-  border: 2px solid #646cff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  letter-spacing: -2px;
-}
-
-.timer-face.break {
-  border-color: #4caf50;
-}
-
-/* ==========================================================================
-   🎨 INSPIRATION MOOD BOARD (MoodBoard.jsx)
-   ========================================================================== */
-.mood-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.25rem;
-  align-items: start;
-}
-
-.mood-card {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  min-height: 150px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.delete-overlay-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.65);
-  color: #ff4a4a;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  z-index: 2;
-}
-
-/* ==========================================================================
-   ⌨️ STANDARDIZED CORE CONTROLS (Inputs, Action Buttons)
-   ========================================================================== */
-input[type="text"],
-input[type="number"] {
-  background-color: #111;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.95rem;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus {
-  outline: none;
-  border-color: #646cff;
-}
-
-.btn-primary {
-  padding: 0.75rem 1.5rem;
-  background-color: #646cff;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #535bf2;
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
 }

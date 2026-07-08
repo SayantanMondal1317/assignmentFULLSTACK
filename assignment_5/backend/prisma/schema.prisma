@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  tasks     Task[]
+  goals     Goal[]
+  moodItems MoodItem[]
+}
+
+model Task {
+  id        String    @id @default(uuid())
+  title     String
+  dueDate   String?
+  completed Boolean   @default(false)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subtasks  Subtask[]
+}
+
+model Subtask {
+  id        String  @id @default(uuid())
+  title     String
+  completed Boolean @default(false)
+  taskId    String
+  task      Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Goal {
+  id       String @id @default(uuid())
+  title    String
+  progress Int    @default(0)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MoodItem {
+  id    String @id @default(uuid())
+  type  String
+  value String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
